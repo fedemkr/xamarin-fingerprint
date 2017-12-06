@@ -191,6 +191,8 @@ namespace Plugin.Fingerprint.Dialog
 
         private void OnFallback(object sender, EventArgs e)
         {
+            _cancelationTokenSource.Cancel();
+
             SetManualResult(FingerprintAuthenticationResultStatus.FallbackRequested);
         }
 

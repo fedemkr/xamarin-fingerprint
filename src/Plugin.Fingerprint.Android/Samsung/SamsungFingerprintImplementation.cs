@@ -75,9 +75,16 @@ namespace Plugin.Fingerprint.Samsung
                     _spassFingerprint.StartIdentify(listener);
                     return true;
                 }
-                catch (IllegalStateException ex)
+                catch (IllegalStateException isex)
                 {
-                    Log.Warn(nameof(SamsungFingerprintImplementation), ex);
+                    if (isex.Message == "Identify request is denied because a previous request is still in progress.")
+                    {
+                        _spassFingerprint.CancelIdentify();
+                        await Task.Delay(100);
+                        return await this.StartIdentify(listener);
+                    }
+
+                    Log.Warn(nameof(SamsungFingerprintImplementation), isex);
                     await Task.Delay(100);
                 }
                 catch (Exception ex)

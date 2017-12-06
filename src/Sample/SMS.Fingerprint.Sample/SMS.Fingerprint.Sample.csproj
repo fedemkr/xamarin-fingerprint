@@ -11,10 +11,19 @@
   <ItemGroup>
     <Compile Update="**\*.xaml.cs" DependentUpon="%(Filename)" />
     <EmbeddedResource Include="**\*.xaml" SubType="Designer" Generator="MSBuild:UpdateDesignTimeXaml" />
+    <Compile Condition=" '$(EnableDefaultCompileItems)' == 'true' " Update="MainView.xaml.cs">
+      <DependentUpon>MainView.xaml</DependentUpon>
+    </Compile>
+    <Compile Condition=" '$(EnableDefaultCompileItems)' == 'true' " Update="SecretView.xaml.cs">
+      <DependentUpon>SecretView.xaml</DependentUpon>
+    </Compile>
   </ItemGroup>
 	
   <ItemGroup>
     <ProjectReference Include="..\..\Plugin.Fingerprint.Abstractions\Plugin.Fingerprint.Abstractions.csproj" />
     <ProjectReference Include="..\..\Plugin.Fingerprint\Plugin.Fingerprint.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="ServicesInterfaces\" />
   </ItemGroup>
 </Project>

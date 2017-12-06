@@ -2,6 +2,7 @@
 using System.Threading;
 using System.Threading.Tasks;
 using Plugin.Fingerprint.Abstractions;
+using SMS.Fingerprint.Sample.Interfaces;
 using Xamarin.Forms;
 
 namespace SMS.Fingerprint.Sample
@@ -41,8 +42,16 @@ namespace SMS.Fingerprint.Sample
             dialogConfig.HelpTexts.MovedTooFast = tooFast;
 
             var result = await Plugin.Fingerprint.CrossFingerprint.Current.AuthenticateAsync(dialogConfig, _cancel.Token);
+            if (result.Status == FingerprintAuthenticationResultStatus.FallbackRequested)
+            {
+                var fallbackService = DependencyService.Get<IFallbackAuthService>();
+                fallbackService.ShowFallbackAsync();
 
-            await SetResultAsync(result);
+                //result.ErrorMessage = completedSuccessfully ? string.Empty : "Wrong fallback value";
+                //result.Status = completedSuccessfully ? FingerprintAuthenticationResultStatus.Succeeded : FingerprintAuthenticationResultStatus.Failed;
+            }
+            else
+                await SetResultAsync(result);
         }
 
         private async Task SetResultAsync(FingerprintAuthenticationResult result)
